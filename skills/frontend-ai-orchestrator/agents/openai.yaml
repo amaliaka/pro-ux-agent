@@ -1,0 +1,4 @@
+interface:
+  display_name: "Frontend AI Orchestrator"
+  short_description: "Orchestrate full frontend SDLC with curated skills."
+  default_prompt: "Run intake/scaffold (if greenfield) by delegating phase 0 to frontend-scaffold-intake, then combined plan+design contract: superpowers brainstorming -> superpowers writing-plans -> ui-ux-pro-max, then build, optional browser QA/refine, regression testing with Playwright, and release validation. Ask for optional library choices before scaffolding. Default to pnpm unless the user asks for a different package manager."
