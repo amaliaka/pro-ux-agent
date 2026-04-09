@@ -1,6 +1,6 @@
 ---
 name: frontend-scaffold-intake
-description: "Run greenfield frontend intake + scaffold safely: confirm stack/addons, choose target path, run stack-aware scaffold commands, and produce a handoff record for planning."
+description: "Run greenfield frontend intake + scaffold safely: confirm stack/addons, choose path strategy, use temp staging for risky root merges, run stack-aware scaffold commands, and produce a handoff record for planning."
 ---
 
 # Frontend Scaffold Intake
@@ -19,12 +19,13 @@ Primary goals:
 
 Run this order:
 1. Intake decision capture
-2. Target path decision
+2. Target path strategy decision
 3. Scaffold command selection
 4. Optional library confirmation
 5. Scaffold execution
-6. Post-scaffold addon installation
-7. Handoff summary
+6. Conflict/merge validation when temp staging is used
+7. Post-scaffold addon installation
+8. Handoff summary
 
 For each run, return:
 1. Goal
@@ -51,10 +52,12 @@ Confirm before scaffolding:
 ## Path Strategy
 
 When workspace is non-empty:
-1. Do not scaffold into `.` by default.
-2. Default target: `apps/<project-name>`.
-3. If target exists, use `apps/<project-name>-<timestamp>`.
-4. Only scaffold into root if user explicitly asks.
+1. Do not scaffold directly into `.` by default.
+2. If the user explicitly wants the current workspace root, scaffold into a temp directory first.
+3. Run a merge/conflict check before copying staged files back into the workspace.
+4. Copy staged files into the workspace root only when conflicts are absent or explicitly approved.
+5. If root merge is risky or unresolved, fall back to `apps/<project-name>` or another explicit target path.
+6. Use a direct subfolder target when the user wants an isolated app folder or the staged root-merge plan is not approved.
 
 ## Scaffold Command Matrix
 
@@ -112,9 +115,10 @@ Default package manager policy:
 
 1. Stack and template are explicitly confirmed.
 2. Optional library choices are explicitly confirmed.
-3. Target path is explicit and safe.
-4. Scaffold completes, or blocker + next fix action is recorded.
-5. Handoff payload is complete.
+3. Path strategy and target path are explicit and safe.
+4. If temp staging is used, merge/conflict status is explicit before files are copied into the workspace.
+5. Scaffold completes, or blocker + next fix action is recorded.
+6. Handoff payload is complete.
 
 ## Handoff Payload (Required)
 
@@ -123,9 +127,11 @@ Return these fields for orchestrators/manual flows:
 2. `framework`
 3. `language`
 4. `package_manager`
-5. `target_path`
-6. `scaffold_command`
-7. `optional_libraries_approved`
-8. `optional_libraries_declined`
-9. `post_scaffold_installs`
-10. `blockers` (if any)
+5. `path_strategy`
+6. `target_path`
+7. `scaffold_command`
+8. `optional_libraries_approved`
+9. `optional_libraries_declined`
+10. `post_scaffold_installs`
+11. `merge_summary`
+12. `blockers` (if any)

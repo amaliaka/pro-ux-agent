@@ -11,7 +11,7 @@ Use this schema for `.orchestrator/status/phase-<n>.json` and `run-summary.json`
 5. `status` (string): `passed`, `failed`, `skipped`, `waived`, or `blocked`
 6. `gate_passed` (boolean)
 7. `failed_checks` (array of strings)
-8. `artifacts` (array of strings): output file paths
+8. `artifacts` (array of strings): output file paths. Use canonical run artifact paths (for example `.orchestrator/contracts/SPEC.md`, `.orchestrator/contracts/PLAN.md`, `.orchestrator/contracts/DESIGN.md` unless the workflow explicitly chose a different shared location)
 9. `evidence` (array of strings): logs, screenshots, test reports
 10. `next_action` (object):
     - `type` (`continue`, `repair`, `retry`, `stop`, `handoff`)
@@ -40,9 +40,9 @@ Use this schema for `.orchestrator/status/phase-<n>.json` and `run-summary.json`
   "gate_passed": true,
   "failed_checks": [],
   "artifacts": [
-    "artifacts/spec/SPEC.md",
-    "artifacts/plan/PLAN.md",
-    "artifacts/design/DESIGN.md"
+    ".orchestrator/contracts/SPEC.md",
+    ".orchestrator/contracts/PLAN.md",
+    ".orchestrator/contracts/DESIGN.md"
   ],
   "evidence": [
     "logs/phase-1-contract-check.log"

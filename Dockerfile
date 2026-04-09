@@ -60,6 +60,7 @@ RUN set -eux; \
 
 COPY scripts/install-opencode-skills.sh /usr/local/bin/install-opencode-skills
 COPY skills/frontend-ai-orchestrator /opt/opencode-custom-skills/frontend-ai-orchestrator
+COPY skills/frontend-scaffold-intake /opt/opencode-custom-skills/frontend-scaffold-intake
 
 RUN chmod +x /usr/local/bin/install-opencode-skills
 RUN LOCAL_SKILL_ROOT=/opt/opencode-custom-skills \
@@ -107,6 +108,8 @@ RUN set -eux; \
         bash \
         ca-certificates \
         chromium \
+        curl \
+        git \
         nodejs \
         npm \
         python3; \
@@ -116,6 +119,8 @@ RUN set -eux; \
         bash \
         ca-certificates \
         chromium \
+        curl \
+        git \
         nodejs \
         npm \
         python3; \

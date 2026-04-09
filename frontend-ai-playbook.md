@@ -30,7 +30,7 @@ Skill set:
 ## End-to-End Workflow
 
 1. Intake + scaffold the starter app (for greenfield projects)
-2. Run a plan contract + design contract phase with Superpowers and UI UX Pro Max (`SPEC.md`, `PLAN.md`, `DESIGN.md`)
+2. Run a plan contract + design contract phase with Superpowers and UI UX Pro Max (`.orchestrator/contracts/SPEC.md`, `.orchestrator/contracts/PLAN.md`, `.orchestrator/contracts/DESIGN.md`)
 3. Build implementation with OpenCode using planned milestones
 4. Run exploratory browser QA with agent-browser (optional)
 5. Run Impeccable refinement if exploratory QA or regression signals meaningful UX issues (optional)
@@ -82,6 +82,9 @@ Before scaffolding, confirm:
 3) language (js/ts)
 4) package manager (default: pnpm)
 5) optional libraries: tailwind, router, state management, UI library, form/validation, testing
+6) path preference: current workspace root vs isolated app folder
+
+If current workspace root is requested in a non-empty directory, scaffold into a temp directory first, review merge conflicts, and only then copy files back.
 
 If user chooses Vue + Vite (js), scaffold with:
 pnpm create vite@latest my-vue-app --template vue
@@ -98,22 +101,28 @@ Other common scaffold mappings:
 
 ```text
 Act as my OpenCode implementation lead.
-Use a combined superpowers + ui-ux-pro-max workflow.
+Use a combined Superpowers + selected design-authority workflow.
 Run sequence:
-1) superpowers brainstorming -> SPEC.md
-2) superpowers writing-plans -> PLAN.md (M1..Mn, AC1..ACn)
-3) ui-ux-pro-max design-system pass -> DESIGN.md
-4) contract-check:
-   - every milestone in PLAN.md maps to DESIGN.md
-   - every major DESIGN.md section maps back to milestone IDs
+1) superpowers brainstorming -> `.orchestrator/contracts/SPEC.md`
+2) superpowers writing-plans -> `.orchestrator/contracts/PLAN.md` (M1..Mn, AC1..ACn)
+3) choose the best design mode:
+   - ui-ux-pro-max for open-ended direction
+   - design-system for tokens/components/system rules
+   - ui-styling when an existing design/template needs implementation-ready guidance
+   - design alignment when the user already has an authoritative design/template
+4) produce `.orchestrator/contracts/DESIGN.md`
+5) contract-check:
+   - every milestone in `.orchestrator/contracts/PLAN.md` maps to `.orchestrator/contracts/DESIGN.md`
+   - every major `.orchestrator/contracts/DESIGN.md` section maps back to milestone IDs
    - acceptance criteria are measurable and represented in implementation or QA strategy
-5) if contract-check fails, run targeted repair for missing mappings only (max 2 retries)
+   - `.orchestrator/contracts/DESIGN.md` states the selected design mode or existing design authority
+6) if contract-check fails, run targeted repair for missing mappings only (max 2 retries)
 
 Feature: <describe feature>.
 Output:
-1) SPEC.md summary
-2) PLAN.md summary
-3) DESIGN.md summary
+1) `.orchestrator/contracts/SPEC.md` summary
+2) `.orchestrator/contracts/PLAN.md` summary
+3) `.orchestrator/contracts/DESIGN.md` summary
 4) contract-check result (pass/fail + missing mappings)
 5) verification strategy
 6) phase status JSON path
@@ -180,6 +189,8 @@ Use playwright-cli to validate critical user journeys:
 1) login
 2) primary conversion flow
 3) settings update flow
+
+If project-local Playwright reports that Chromium is missing or the browser executable cannot be found, run `pnpm exec playwright install chromium` in the project workspace before rerunning tests. Prefer that over switching Playwright to `/usr/bin/chromium` first.
 
 Then generate/update automated tests for failures and rerun until green.
 Summarize flaky risks and coverage gaps.
@@ -251,7 +262,7 @@ Recommended structure for a root skill:
 ```text
 Run the frontend delivery workflow using my installed skills:
 1) Intake/scaffold first if this is a new app (ask optional libraries before scaffolding)
-2) Superpowers + UI UX Pro Max for plan/design contracts (SPEC.md, PLAN.md, DESIGN.md)
+2) Superpowers + UI UX Pro Max for plan/design contracts (`.orchestrator/contracts/SPEC.md`, `.orchestrator/contracts/PLAN.md`, `.orchestrator/contracts/DESIGN.md`)
 3) OpenCode for implementation milestones
 4) agent-browser for optional exploratory browser QA
 5) Impeccable for optional refinement pass

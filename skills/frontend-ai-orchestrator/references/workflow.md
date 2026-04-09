@@ -20,36 +20,60 @@ Fallback: OpenCode shell commands with explicit user confirmation for options.
 
 Deliverables:
 1. Stack decision record (framework, language, package manager, app name; default package manager is pnpm unless overridden)
-2. Target directory decision (`apps/<app-name>` when workspace is non-empty unless explicitly overridden)
-3. Scaffold command selection (from stack command matrix)
-4. Optional-library-aware command/flag decisions
-5. Optional library decision list (approved/declined)
-6. Stack-aware addon defaults decision notes
-7. Scaffold execution summary
-8. Scaffold handoff payload (app name, stack, target path, command used, addon decisions, blockers)
+2. Path strategy decision (`workspace_root_via_temp`, `subfolder`, or another explicit target strategy)
+3. Target directory decision (`apps/<app-name>` or explicit alternative when relevant)
+4. Scaffold command selection (from stack command matrix)
+5. Optional-library-aware command/flag decisions
+6. Optional library decision list (approved/declined)
+7. Stack-aware addon defaults decision notes
+8. Scaffold execution summary
+9. Merge/conflict summary when temp staging is used
+10. Scaffold handoff payload with exact keys:
+   - `app_name`
+   - `framework`
+   - `language`
+   - `package_manager`
+   - `path_strategy`
+   - `target_path`
+   - `scaffold_command`
+   - `optional_libraries_approved`
+   - `optional_libraries_declined`
+   - `post_scaffold_installs`
+   - `merge_summary`
+   - `blockers`
 
 Exit criteria:
 1. Stack and template are explicitly confirmed.
 2. Optional library choices are explicitly confirmed.
-3. Scaffold target path is explicit and safe for current workspace state.
-4. Starter app scaffold exists and installs successfully with the chosen package manager (or failure is reported with next fix action).
-5. `.orchestrator/status/phase-0.json` written.
+3. Path strategy and scaffold target path are explicit and safe for current workspace state.
+4. If current-workspace-root placement is requested in a non-empty workspace, temp staging plus conflict review is completed before files are copied back.
+5. Starter app scaffold exists and installs successfully with the chosen package manager, or the phase is marked `failed`/`blocked` with explicit blocker details and next action.
+6. The scaffold handoff payload is complete and machine-checkable.
+7. Do not hand off to phase 1 while unresolved scaffold blockers remain unless the user explicitly waives the blocker.
+8. `.orchestrator/status/phase-0.json` written.
 
-### Phase 1: Plan Contract + Design Contract (Superpowers + UI UX Pro Max)
+### Phase 1: Plan Contract + Design Contract / Alignment (Superpowers + selected design authority)
 
 Goal: produce a machine-checkable delivery contract before implementation.
-Preferred skills: `brainstorming`, `writing-plans`, `ui-ux-pro-max`
+Preferred skills: `brainstorming`, `writing-plans`, then choose `ui-ux-pro-max`, `design-system`, or `ui-styling`; use `brand` as optional input when identity is unresolved
+Artifact directory: `.orchestrator/contracts/`
 
 Sequence:
-1. Superpowers brainstorming/spec approval -> `SPEC.md`
-2. Superpowers writing-plans output -> `PLAN.md`
-3. UI UX Pro Max design-system finalization and milestone mapping -> `DESIGN.md`
-4. Contract check and targeted repair loop (max 2 retries)
+1. Superpowers brainstorming/spec approval -> `.orchestrator/contracts/SPEC.md`
+2. Superpowers writing-plans output -> `.orchestrator/contracts/PLAN.md`
+3. Choose design mode:
+   - `net_new_direction` -> `ui-ux-pro-max`
+   - `design_system` -> `design-system`
+   - `implementation_styling` -> `ui-styling`
+   - `design_alignment` -> normalize an existing authoritative design/template into `.orchestrator/contracts/DESIGN.md`
+   - optional `brand` input pass when identity is still open
+4. Produce `.orchestrator/contracts/DESIGN.md`
+5. Contract check and targeted repair loop (max 2 retries)
 
 Deliverables:
-1. `SPEC.md` with approved scope + assumptions
-2. `PLAN.md` with milestone IDs (`M1`, `M2`, ...) and acceptance criteria IDs (`AC1`, `AC2`, ...)
-3. `DESIGN.md` with token system, style rules, anti-patterns, and mappings keyed by `M#`
+1. `.orchestrator/contracts/SPEC.md` with approved scope + assumptions
+2. `.orchestrator/contracts/PLAN.md` with milestone IDs (`M1`, `M2`, ...) and acceptance criteria IDs (`AC1`, `AC2`, ...)
+3. `.orchestrator/contracts/DESIGN.md` with either generated design rules or preserved design-alignment constraints, always mapped by `M#`
 4. Risk list and definition of done
 5. Verification strategy
 
@@ -58,13 +82,15 @@ Exit criteria:
 2. Acceptance criteria are testable.
 3. Risks have mitigation notes.
 4. Spec is approved before plan/build handoff.
-5. Token choices are documented.
-6. Visual direction is approved or defaulted explicitly.
-7. Accessibility implications are called out.
-8. Every `PLAN.md` milestone has a mapping in `DESIGN.md`.
-9. Every major `DESIGN.md` section maps back to at least one milestone.
-10. Contract check passed (or explicit user waiver).
-11. `.orchestrator/status/phase-1.json` written.
+5. Selected design mode is explicit.
+6. Token choices are documented when new tokens are created or existing tokens are referenced.
+7. Visual direction is approved, defaulted explicitly, or marked as preserved from the existing design authority.
+8. Accessibility implications are called out.
+9. Every `.orchestrator/contracts/PLAN.md` milestone has a mapping in `.orchestrator/contracts/DESIGN.md`.
+10. Every major `.orchestrator/contracts/DESIGN.md` section maps back to at least one milestone.
+11. Existing template/design constraints are captured when provided.
+12. Contract check passed (or explicit user waiver).
+13. `.orchestrator/status/phase-1.json` written.
 
 ### Phase 2: Build (OpenCode + Superpowers discipline)
 
@@ -134,18 +160,24 @@ Exit criteria:
 Goal: convert critical behavior into deterministic tests.
 Preferred skill: `playwright-cli`
 
+Run conditions:
+1. If the project uses project-local Playwright and Chromium is missing, run `pnpm exec playwright install chromium` in the project workspace before the regression run.
+2. Prefer this project-scale install step over switching Playwright to `/usr/bin/chromium` for pnpm-based app workflows.
+
 Deliverables:
 1. Updated test coverage for critical journeys
 2. Test run outcomes
 3. Flakiness notes and mitigations
 4. Test-state isolation notes (clean state or dedicated regression account/profile)
+5. Browser-install evidence when a missing-browser repair was needed
 
 Exit criteria:
 1. Critical-path tests pass.
 2. New regressions are covered.
 3. Remaining gaps are explicit.
 4. Regression tests do not depend on exploratory browser state.
-5. `.orchestrator/status/phase-5.json` written.
+5. If a missing-browser error occurred in a project-local Playwright setup, the repair command and rerun outcome are recorded.
+6. `.orchestrator/status/phase-5.json` written.
 
 ### Phase 6: Release Verification (Superpowers)
 

@@ -166,6 +166,18 @@ Validate the toolchain and shared-browser wiring:
 smoke-opencode-toolchain
 ```
 
+## Documentation
+
+For the team-facing documentation set, see:
+
+- [docs/README.md](/Users/amaliaka/Work/Devops/pro-ux-agent/docs/README.md)
+- [docs/01-setup.md](/Users/amaliaka/Work/Devops/pro-ux-agent/docs/01-setup.md)
+- [docs/02-docker-usage.md](/Users/amaliaka/Work/Devops/pro-ux-agent/docs/02-docker-usage.md)
+- [docs/03-scenarios-and-flows.md](/Users/amaliaka/Work/Devops/pro-ux-agent/docs/03-scenarios-and-flows.md)
+- [docs/04-using-orchestrator.md](/Users/amaliaka/Work/Devops/pro-ux-agent/docs/04-using-orchestrator.md)
+- [docs/05-using-individual-skills.md](/Users/amaliaka/Work/Devops/pro-ux-agent/docs/05-using-individual-skills.md)
+- [docs/06-custom-skills-and-rationale.md](/Users/amaliaka/Work/Devops/pro-ux-agent/docs/06-custom-skills-and-rationale.md)
+
 ## Skill Usage Guide
 
 For scenarios, prompt examples, and an end-to-end workflow that uses all installed tools/skills together, see:
@@ -186,7 +198,8 @@ Root skill source in this repo:
 3. Scaffolds with the matching starter command
 4. Uses `pnpm` as default package manager unless user explicitly requests another one
 5. In non-empty repositories, defaults scaffold path to `apps/<project-name>` unless root placement is explicitly requested
-6. Applies optional-library choices in scaffold flags/modules when supported by the stack
+6. If root placement is explicitly requested in a non-empty repository, scaffolds in a temp directory first and copies back only after merge/conflict review
+7. Applies optional-library choices in scaffold flags/modules when supported by the stack
 
 Example mapping:
 
@@ -205,5 +218,6 @@ This happens before `Plan + Design -> Build` unless you explicitly waive phases.
 Behavior alignment note:
 
 1. Superpowers flow is treated as spec-first (`brainstorming`) then plan (`writing-plans`) before build.
-2. UI UX Pro Max is used in that same combined phase to finalize design-system tokens/rules after plan structure is clear.
-3. UI UX Pro Max input should include explicit product/industry + target stack so its reasoning engine and stack-specific guidance are applied.
+2. Phase 1 design routing now chooses between `ui-ux-pro-max`, `design-system`, `ui-styling`, or existing-design alignment depending on what the user already has.
+3. If the user already has an authoritative design/template, the orchestrator should preserve it and write `.orchestrator/contracts/DESIGN.md` as an alignment contract instead of inventing a new design system.
+4. UI UX Pro Max family input should include explicit product/industry + target stack so its reasoning engine and stack-specific guidance are applied.

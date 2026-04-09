@@ -48,8 +48,8 @@ What you do:
 2. Make sure milestones and acceptance criteria are explicit.
 
 Expected output:
-1. `SPEC.md`
-2. `PLAN.md` with milestone IDs (`M1..Mn`) and acceptance criteria IDs (`AC1..ACn`)
+1. `.orchestrator/contracts/SPEC.md`
+2. `.orchestrator/contracts/PLAN.md` with milestone IDs (`M1..Mn`) and acceptance criteria IDs (`AC1..ACn`)
 
 Prompt template:
 
@@ -57,7 +57,7 @@ Prompt template:
 Use superpowers/brainstorming, then superpowers/writing-plans.
 Task: <feature/task>
 Constraints: <stack, deadline, requirements>
-Output SPEC.md and PLAN.md with explicit M# and AC# IDs.
+Output `.orchestrator/contracts/SPEC.md` and `.orchestrator/contracts/PLAN.md` with explicit M# and AC# IDs.
 ```
 
 ## Step 2: Design With UI UX Pro Max
@@ -67,13 +67,13 @@ What you do:
 2. Ask it to convert plan milestones into design rules.
 
 Expected output:
-1. `DESIGN.md`
+1. `.orchestrator/contracts/DESIGN.md`
 2. `design-system/MASTER.md` (or your design-system file)
 
 Prompt template:
 
 ```text
-Use ui-ux-pro-max to generate DESIGN.md from PLAN.md.
+Use ui-ux-pro-max to generate `.orchestrator/contracts/DESIGN.md` from `.orchestrator/contracts/PLAN.md`.
 Product/industry: <domain>
 Target stack: <framework>
 Include color/type/spacing tokens, component rules, anti-patterns, and M# mapping.
@@ -82,8 +82,8 @@ Include color/type/spacing tokens, component rules, anti-patterns, and M# mappin
 ## Step 3: Manual Gate Check Before Build
 
 Check these 3 things:
-1. Every `M#` in `PLAN.md` is mapped in `DESIGN.md`.
-2. Every major section in `DESIGN.md` maps back to at least one `M#`.
+1. Every `M#` in `.orchestrator/contracts/PLAN.md` is mapped in `.orchestrator/contracts/DESIGN.md`.
+2. Every major section in `.orchestrator/contracts/DESIGN.md` maps back to at least one `M#`.
 3. Acceptance criteria are measurable.
 
 If check fails:
@@ -99,7 +99,7 @@ What you do:
 Prompt template:
 
 ```text
-Implement milestone <Mx> from PLAN.md using DESIGN.md rules.
+Implement milestone <Mx> from `.orchestrator/contracts/PLAN.md` using `.orchestrator/contracts/DESIGN.md` rules.
 Use small verifiable steps.
 After implementation, summarize what changed and what is verified.
 ```

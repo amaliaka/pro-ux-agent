@@ -9,29 +9,34 @@ Phase status requirement (all phases):
 
 ### Intake + Scaffold gate
 1. Stack decisions confirmed (framework, language, package manager, app name; default manager is pnpm unless overridden)
-2. Scaffold command chosen from stack matrix and recorded
-3. Optional libraries explicitly approved or declined
-4. Optional-library-aware scaffold flags/modules are captured
-5. Stack-aware addon defaults are acknowledged (for example Next router built-in, Nuxt module-first)
-6. Non-empty workspace path strategy is respected or explicitly overridden by user
-7. Scaffold completed or blocker captured with next action
-8. Scaffold handoff payload is complete
-9. Phase status JSON written
+2. Path strategy is explicit (`workspace_root_via_temp`, `subfolder`, or other approved target strategy)
+3. Scaffold command chosen from stack matrix and recorded
+4. Optional libraries explicitly approved or declined
+5. Optional-library-aware scaffold flags/modules are captured
+6. Stack-aware addon defaults are acknowledged (for example Next router built-in, Nuxt module-first)
+7. Non-empty workspace path strategy is respected or explicitly overridden by user
+8. If workspace-root placement is requested in a non-empty workspace, temp staging and merge/conflict review are completed before copy-back
+9. Scaffold completed or blocker captured with next action
+10. Scaffold handoff payload is complete with `app_name`, `framework`, `language`, `package_manager`, `path_strategy`, `target_path`, `scaffold_command`, `optional_libraries_approved`, `optional_libraries_declined`, `post_scaffold_installs`, `merge_summary`, and `blockers`
+11. Phase 1 does not begin while unresolved scaffold blockers remain unless explicitly waived by the user
+12. Phase status JSON written
 
-### Plan Contract + Design Contract gate
+### Plan Contract + Design Contract / Alignment gate
 1. Spec clarified and explicitly approved
-2. `SPEC.md`, `PLAN.md`, and `DESIGN.md` artifacts exist
+2. `.orchestrator/contracts/SPEC.md`, `.orchestrator/contracts/PLAN.md`, and `.orchestrator/contracts/DESIGN.md` artifacts exist
 3. Milestones defined with stable IDs (`M#`)
 4. Acceptance criteria measurable (with explicit IDs, for example `AC#`)
 5. Risks and assumptions listed
-6. Tokens documented
-7. Direction selected or defaulted
-8. Accessibility concerns addressed
-9. Design rules mapped to milestones
-10. Industry + stack-specific guidance is explicitly captured
-11. Anti-patterns and pre-delivery checklist are documented
-12. Contract check passes: every milestone has design mapping and every major design section maps to milestones
-13. Phase status JSON written
+6. Selected design mode is documented
+7. Tokens are documented when created or explicitly inherited from an existing design authority
+8. Direction selected, defaulted, or preserved from the existing design source
+9. Accessibility concerns addressed
+10. Design rules mapped to milestones
+11. Existing template/design constraints are captured when provided
+12. Industry + stack-specific guidance is explicitly captured when a UI UX Pro Max family skill is used
+13. Anti-patterns and pre-delivery checklist are documented when new design decisions are created
+14. Contract check passes: every milestone has design mapping and every major design section maps to milestones
+15. Phase status JSON written
 
 ### Build gate
 1. Plan Contract + Design Contract gate passed or explicitly waived by the user
