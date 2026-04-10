@@ -25,7 +25,7 @@ docker run --rm -it \
   --entrypoint bash \
   -v "$(pwd)/your-project:/workspace" \
   -w /workspace \
-  opencode-with-skills
+  pro-ux-agent
 ```
 
 Then run:
@@ -41,7 +41,7 @@ docker run --rm -it \
   -p 3010:3010 \
   -v "$(pwd)/your-project:/workspace" \
   -w /workspace \
-  opencode-with-skills \
+  pro-ux-agent \
   web --hostname 0.0.0.0 --port 3010 --print-logs
 ```
 
@@ -58,7 +58,7 @@ docker run --rm -it \
   -p 3110:3110 \
   -v "$(pwd)/your-project:/workspace" \
   -w /workspace \
-  opencode-with-skills \
+  pro-ux-agent \
   web --hostname 0.0.0.0 --port 3110 --print-logs
 ```
 
@@ -67,13 +67,13 @@ docker run --rm -it \
 Verbose rebuild:
 
 ```bash
-docker build --no-cache --progress=plain -t opencode-with-skills .
+docker build --no-cache --progress=plain -t pro-ux-agent .
 ```
 
 Faster iterative rebuild without smoke checks:
 
 ```bash
-docker build --build-arg RUN_SMOKE_CHECK=0 -t opencode-with-skills .
+docker build --build-arg RUN_SMOKE_CHECK=0 -t pro-ux-agent .
 ```
 
 ## Host Persistence Patterns
@@ -105,7 +105,7 @@ docker run --rm -it \
   -v "$HOME/.engram:/root/.engram" \
   -v "$HOME/.agent-browser:/root/.agent-browser" \
   -w /workspace \
-  opencode-with-skills
+  pro-ux-agent
 ```
 
 ## Useful Container Commands

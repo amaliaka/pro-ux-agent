@@ -13,13 +13,13 @@ This page is the quickest path to get a teammate from zero to a working OpenCode
 From the repository root:
 
 ```bash
-docker build -t opencode-with-skills .
+docker build -t pro-ux-agent .
 ```
 
 If you want more reproducible builds, pin the refs and versions:
 
 ```bash
-docker build -t opencode-with-skills \
+docker build -t pro-ux-agent \
   --build-arg OPENCODE_IMAGE=ghcr.io/anomalyco/opencode:latest \
   --build-arg SUPERPOWERS_REF=main \
   --build-arg UI_UX_PRO_MAX_REF=main \
@@ -39,7 +39,7 @@ docker run --rm -it \
   --entrypoint bash \
   -v "$(pwd)/your-project:/workspace" \
   -w /workspace \
-  opencode-with-skills
+  pro-ux-agent
 ```
 
 Inside the container:
@@ -80,7 +80,7 @@ docker run --rm -it \
   -v "$(pwd)/your-project:/workspace" \
   -v "$HOME/.engram:/root/.engram" \
   -w /workspace \
-  opencode-with-skills
+  pro-ux-agent
 ```
 
 If the mounted config folder is empty, seed the bundled OpenCode assets once:
@@ -119,7 +119,7 @@ docker run --rm -it \
   -v "$HOME/.opencode-config:/root/.config/opencode" \
   -v "$HOME/.agent-browser:/root/.agent-browser" \
   -w /workspace \
-  opencode-with-skills
+  pro-ux-agent
 ```
 
 If runtime settings change, close the daemon first:

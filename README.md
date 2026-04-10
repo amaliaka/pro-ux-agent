@@ -1,41 +1,72 @@
-# OpenCode Docker + Skills
+# pro-ux-agent
 
-This image extends `ghcr.io/anomalyco/opencode` and preinstalls:
+`pro-ux-agent` is a Dockerized OpenCode environment for frontend delivery. It packages OpenCode together with a curated skill stack, browser tooling, persistent memory support, and custom orchestration skills so teammates can start from the same working setup instead of recreating local environments by hand.
 
-- engram persistent memory for OpenCode (`Gentleman-Programming/engram`)
-- superpower skills (`obra/superpowers`)
-- ui ux pro max skills (`nextlevelbuilder/ui-ux-pro-max-skill`)
-- impeccable skills (`pbakaus/impeccable`)
-- playwright cli skills (`microsoft/playwright-cli`)
-- agent-browser skills (`vercel-labs/agent-browser`)
-- root orchestration skill (`frontend-ai-orchestrator`)
-- dedicated scaffold intake skill (`frontend-scaffold-intake`)
+The repository is designed for teams that want a repeatable workflow for planning, scaffolding, building, reviewing, and validating frontend work with AI assistance.
 
-Superpowers is configured using the official OpenCode plugin method in global config (`~/.config/opencode/opencode.json`) instead of manual skill copying.
-UI UX Pro Max uses the official `uipro-cli` install flow (`uipro init --ai opencode`) and is then installed into global OpenCode skills.
-Engram is installed as a native binary, its OpenCode plugin is seeded into `~/.config/opencode/plugins/engram.ts`, and the image ensures an `mcp.engram` entry exists in `~/.config/opencode/opencode.json`.
+## Highlights
 
-The image now uses a multi-stage build:
+- One containerized environment for OpenCode, browser tooling, memory, and frontend workflow skills
+- Faster teammate onboarding with a reproducible Docker-first setup
+- Shared Chromium runtime for both Playwright CLI and agent-browser
+- Repo-owned orchestration skills for safer scaffolding and more consistent execution
+- Built-in smoke checks for validating the environment after build
 
-- builder stage installs and prepares all skills/config
-- final stage keeps only runtime requirements and seeded skills
+## Features
 
-The final image installs one shared system Chromium (`/usr/bin/chromium`) and both Playwright + agent-browser reuse it.
-`PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1` is enabled, so Playwright browser bundles are not downloaded during build.
-`AGENT_BROWSER_ARGS=--no-sandbox,--disable-dev-shm-usage` is set as a Docker-safe default.
-`python3` is kept in the final image because UI UX Pro Max requires it for its search script.
-`pnpm` is enabled in both builder and final stages and is the default package manager for scaffolded app workflows.
+- Dockerized OpenCode runtime based on `ghcr.io/anomalyco/opencode`
+- Preinstalled AI skill stack for planning, design, implementation, and refinement
+- Engram integration with seeded OpenCode plugin and MCP configuration
+- `pnpm` enabled as the default package manager for scaffolded workflows
+- Multi-stage image build to keep the final runtime leaner
+- Optional persistence for OpenCode config, Engram memory, and agent-browser state
+- Support for interactive CLI use and OpenCode web mode
 
-## Build
+## Project Introduction
+
+This project extends `ghcr.io/anomalyco/opencode` and preinstalls the tools and skills used by this workflow:
+
+- Engram persistent memory for OpenCode
+- Superpowers skills
+- UI UX Pro Max skills
+- Impeccable skills
+- Playwright CLI skills
+- agent-browser skills
+- `frontend-ai-orchestrator`
+- `frontend-scaffold-intake`
+
+It also standardizes a few important runtime choices:
+
+- Multi-stage Docker build for a smaller final image
+- One shared Chromium runtime for Playwright and agent-browser
+- `pnpm` enabled in both builder and final stages
+- Engram plugin and MCP configuration seeded into OpenCode config
+- Docker-safe browser defaults for container usage
+
+## Why This Repo Exists
+
+- Reduce setup drift across teammates and machines
+- Provide a predictable entry point for frontend tasks
+- Bundle planning, design, implementation, and browser validation tools together
+- Preserve workflow rules through repo-owned custom skills instead of relying only on upstream defaults
+
+## Installation
+
+### Prerequisites
+
+- Docker installed locally
+- A local project directory to mount into `/workspace`
+
+### Build The Image
 
 ```bash
-docker build -t opencode-with-skills .
+docker build -t pro-ux-agent .
 ```
 
-For reproducible builds, pin refs/versions (replace `main`/`latest` with specific tags or commit SHAs):
+For more reproducible builds, pin refs and versions instead of using `main` or `latest`:
 
 ```bash
-docker build -t opencode-with-skills \
+docker build -t pro-ux-agent \
   --build-arg OPENCODE_IMAGE=ghcr.io/anomalyco/opencode:latest \
   --build-arg SUPERPOWERS_REF=main \
   --build-arg UI_UX_PRO_MAX_REF=main \
@@ -50,68 +81,67 @@ docker build -t opencode-with-skills \
   .
 ```
 
-Browser runtime is essential. The build will fail if a shared Chromium executable cannot be resolved.
-
-If build fails, retry with verbose logs first:
+If you need a verbose rebuild:
 
 ```bash
-docker build --no-cache --progress=plain -t opencode-with-skills .
+docker build --no-cache --progress=plain -t pro-ux-agent .
 ```
 
-Skip smoke checks for faster iterative builds:
+If you want a faster iterative build and are okay skipping smoke checks:
 
 ```bash
-docker build --build-arg RUN_SMOKE_CHECK=0 -t opencode-with-skills .
+docker build --build-arg RUN_SMOKE_CHECK=0 -t pro-ux-agent .
 ```
 
-## Run (mount your own project directory)
+Browser runtime is required. The build will fail if a shared Chromium executable cannot be resolved.
 
-Mount a local folder into `/workspace` in the container:
+## Quick Start
+
+### Start An Interactive Shell
 
 ```bash
 docker run --rm -it \
   --entrypoint bash \
   -v "$(pwd)/your-project:/workspace" \
   -w /workspace \
-  opencode-with-skills
+  pro-ux-agent
 ```
 
-Inside the container, run OpenCode from that mounted project:
+Inside the container:
 
 ```bash
 opencode
 ```
 
-## Run OpenCode Web (host 0.0.0.0, port 3010)
-
-Expose only port `3010` and run the web server on `0.0.0.0`:
+### Run OpenCode Web
 
 ```bash
 docker run --rm -it \
   -p 3010:3010 \
   -v "$(pwd)/your-project:/workspace" \
   -w /workspace \
-  opencode-with-skills \
+  pro-ux-agent \
   web --hostname 0.0.0.0 --port 3010 --print-logs
 ```
 
-Then open: `http://localhost:3010`
+Open `http://localhost:3010`.
 
-If startup fails with `port is already allocated`, pick another free host port and match it in both places:
+If port `3010` is already in use:
 
 ```bash
 docker run --rm -it \
   -p 3110:3110 \
   -v "$(pwd)/your-project:/workspace" \
   -w /workspace \
-  opencode-with-skills \
+  pro-ux-agent \
   web --hostname 0.0.0.0 --port 3110 --print-logs
 ```
 
-## Persist OpenCode config and skills on host (optional)
+## Persistence
 
-By default, personal skills/config are in `/root/.config/opencode` in the container.
-Bind-mount a host directory if you want them to persist across runs:
+By default, OpenCode config, Engram memory, and agent-browser state live inside the container filesystem. Bind-mount host directories if you want them to survive rebuilds and restarts.
+
+### Persist OpenCode Config
 
 ```bash
 mkdir -p ~/.opencode-config
@@ -121,19 +151,16 @@ docker run --rm -it \
   -v "$(pwd)/your-project:/workspace" \
   -v "$HOME/.opencode-config:/root/.config/opencode" \
   -w /workspace \
-  opencode-with-skills
+  pro-ux-agent
 ```
 
-If this is a new/empty host config folder, seed bundled skills once:
+If the mounted config directory is empty, seed the bundled assets once:
 
 ```bash
 ensure-opencode-skills
 ```
 
-## Persist Engram memory on host (optional)
-
-Engram stores its SQLite database and synced memory files in `/root/.engram` inside the container.
-Bind-mount a host directory if you want memory to survive container restarts:
+### Persist Engram Memory
 
 ```bash
 mkdir -p ~/.engram
@@ -143,13 +170,10 @@ docker run --rm -it \
   -v "$(pwd)/your-project:/workspace" \
   -v "$HOME/.engram:/root/.engram" \
   -w /workspace \
-  opencode-with-skills
+  pro-ux-agent
 ```
 
-## Persist agent-browser state on host (optional)
-
-`agent-browser` stores sessions and state in `~/.agent-browser` by default.
-Bind-mount it if you want browser state to persist:
+### Persist agent-browser State
 
 ```bash
 mkdir -p ~/.agent-browser
@@ -159,26 +183,18 @@ docker run --rm -it \
   -v "$(pwd)/your-project:/workspace" \
   -v "$HOME/.agent-browser:/root/.agent-browser" \
   -w /workspace \
-  opencode-with-skills
+  pro-ux-agent
 ```
 
-If you change browser executable env vars or update runtime settings, close any running daemon first:
+If browser runtime settings change, restart the daemon:
 
 ```bash
 agent-browser close
 ```
 
-This avoids an upstream issue where a running daemon may ignore a newly set `AGENT_BROWSER_EXECUTABLE_PATH`.
+## Verification
 
-## Re-seed skills manually (optional)
-
-```bash
-ensure-opencode-skills
-```
-
-## Smoke check (optional)
-
-Validate the toolchain, Engram wiring, and shared-browser setup:
+Run the built-in smoke test to validate the runtime, shared browser setup, and Engram wiring:
 
 ```bash
 smoke-opencode-toolchain
@@ -195,9 +211,20 @@ engram save "Docker container engram test memory"
 engram search "Docker container engram test"
 ```
 
-## Documentation
+## Workflow Overview
 
-For the team-facing documentation set, see:
+The preferred entry point for frontend work is `frontend-ai-orchestrator`. For greenfield apps, it delegates the intake and scaffolding phase to `frontend-scaffold-intake` before moving into planning, design, implementation, and verification.
+
+At a high level, the workflow favors:
+
+- Confirming stack and scaffold choices before generating app code
+- Using `pnpm` by default unless the user explicitly requests another package manager
+- Preserving existing design systems when a project already has an authoritative UI direction
+- Combining exploratory browser checks, refinement, and deterministic validation before completion
+
+For the full workflow details and examples, use the docs linked below.
+
+## Documentation
 
 - [docs/README.md](/Users/amaliaka/Work/Devops/pro-ux-agent/docs/README.md)
 - [docs/01-setup.md](/Users/amaliaka/Work/Devops/pro-ux-agent/docs/01-setup.md)
@@ -207,46 +234,8 @@ For the team-facing documentation set, see:
 - [docs/05-using-individual-skills.md](/Users/amaliaka/Work/Devops/pro-ux-agent/docs/05-using-individual-skills.md)
 - [docs/06-custom-skills-and-rationale.md](/Users/amaliaka/Work/Devops/pro-ux-agent/docs/06-custom-skills-and-rationale.md)
 
-## Skill Usage Guide
-
-For scenarios, prompt examples, and an end-to-end workflow that uses all installed tools/skills together, see:
+## Skill References
 
 - [frontend-ai-playbook.md](/Users/amaliaka/Work/Devops/pro-ux-agent/frontend-ai-playbook.md)
-
-Root skill source in this repo:
-
 - [skills/frontend-ai-orchestrator/SKILL.md](/Users/amaliaka/Work/Devops/pro-ux-agent/skills/frontend-ai-orchestrator/SKILL.md)
 - [skills/frontend-scaffold-intake/SKILL.md](/Users/amaliaka/Work/Devops/pro-ux-agent/skills/frontend-scaffold-intake/SKILL.md)
-
-### Orchestrator Behavior (important)
-
-`frontend-ai-orchestrator` now includes a required `Intake + Scaffold` phase for greenfield apps, delegated to `frontend-scaffold-intake`:
-
-1. Confirms stack first (framework, language, package manager, app name)
-2. Asks for optional libraries (Tailwind, router, state, UI library, forms, testing)
-3. Scaffolds with the matching starter command
-4. Uses `pnpm` as default package manager unless user explicitly requests another one
-5. In non-empty repositories, defaults scaffold path to `apps/<project-name>` unless root placement is explicitly requested
-6. If root placement is explicitly requested in a non-empty repository, scaffolds in a temp directory first and copies back only after merge/conflict review
-7. Applies optional-library choices in scaffold flags/modules when supported by the stack
-
-Example mapping:
-
-- Vue + Vite (`js`): `pnpm create vite@latest my-vue-app --template vue`
-- Vue + Vite (`ts`): `pnpm create vite@latest my-vue-app --template vue-ts`
-- Vue with built-in feature flags: `pnpm create vue@latest my-vue-app -- --help` (then choose `--typescript`, `--router`, `--pinia`, etc.)
-- Next.js: `pnpm create next-app@latest my-app --yes`
-- Nuxt: `pnpm create nuxt@latest my-app --packageManager pnpm`
-- Astro: `pnpm create astro@latest my-app`
-- Angular: `pnpm dlx @angular/cli@latest new my-app --package-manager pnpm`
-- SvelteKit: `pnpm dlx sv create my-app --template minimal --types ts --no-add-ons --install pnpm`
-- Laravel starter kit: `laravel new my-app`
-
-This happens before `Plan + Design -> Build` unless you explicitly waive phases.
-
-Behavior alignment note:
-
-1. Superpowers flow is treated as spec-first (`brainstorming`) then plan (`writing-plans`) before build.
-2. Phase 1 design routing now chooses between `ui-ux-pro-max`, `design-system`, `ui-styling`, or existing-design alignment depending on what the user already has.
-3. If the user already has an authoritative design/template, the orchestrator should preserve it and write `.orchestrator/contracts/DESIGN.md` as an alignment contract instead of inventing a new design system.
-4. UI UX Pro Max family input should include explicit product/industry + target stack so its reasoning engine and stack-specific guidance are applied.
