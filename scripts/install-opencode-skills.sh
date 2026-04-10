@@ -529,6 +529,7 @@ preflight_checks() {
 install_skills_phase() {
   log "Phase 1/3: installing skills"
 
+  install_repo_skills "superpowers" "${SUPERPOWERS_PLUGIN_REPO}" "${SUPERPOWERS_REF}" "skills" ".opencode/skills"
   configure_superpowers_plugin
 
   if ! install_ui_ux_pro_max_via_cli; then

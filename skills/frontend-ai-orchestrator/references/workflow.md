@@ -55,12 +55,12 @@ Exit criteria:
 ### Phase 1: Plan Contract + Design Contract / Alignment (Superpowers + selected design authority)
 
 Goal: produce a machine-checkable delivery contract before implementation.
-Preferred skills: `brainstorming`, `writing-plans`, then choose `ui-ux-pro-max`, `design-system`, or `ui-styling`; use `brand` as optional input when identity is unresolved
+Preferred skills: `brainstorming`, `writing-plans`, then choose `ui-ux-pro-max`, `design-system`, or `ui-styling`; use `brand` as optional input when identity is unresolved.
 Artifact directory: `.orchestrator/contracts/`
 
 Sequence:
-1. Superpowers brainstorming/spec approval -> `.orchestrator/contracts/SPEC.md`
-2. Superpowers writing-plans output -> `.orchestrator/contracts/PLAN.md`
+1. `brainstorming` -> `.orchestrator/contracts/SPEC.md`
+2. `writing-plans` -> `.orchestrator/contracts/PLAN.md`
 3. Choose design mode:
    - `net_new_direction` -> `ui-ux-pro-max`
    - `design_system` -> `design-system`

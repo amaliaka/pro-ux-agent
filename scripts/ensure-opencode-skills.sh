@@ -7,7 +7,8 @@ OPENCODE_SKILLS_DIR="${OPENCODE_SKILLS_DIR:-${OPENCODE_CONFIG_DIR}/skills}"
 OPENCODE_PLUGINS_DIR="${OPENCODE_PLUGINS_DIR:-${OPENCODE_CONFIG_DIR}/plugins}"
 SKILLS_SEED_DIR="${SKILLS_SEED_DIR:-/opt/opencode-skills-seed}"
 PLUGINS_SEED_DIR="${PLUGINS_SEED_DIR:-/opt/opencode-plugins-seed}"
-CONFIG_SEED_FILE="${CONFIG_SEED_FILE:-/opt/opencode-config-seed/opencode.json}"
+CONFIG_SEED_DIR="${CONFIG_SEED_DIR:-/opt/opencode-config-seed}"
+CONFIG_SEED_FILE="${CONFIG_SEED_FILE:-${CONFIG_SEED_DIR}/opencode.json}"
 
 if [ ! -d "${SKILLS_SEED_DIR}" ]; then
   echo "Seed skills directory not found: ${SKILLS_SEED_DIR}" >&2
@@ -37,6 +38,20 @@ if [ -d "${PLUGINS_SEED_DIR}" ]; then
     if [ ! -f "${target}" ]; then
       cp "${seed_plugin}" "${target}"
       echo "Seeded missing plugin: ${plugin_name}"
+      copied=1
+    fi
+  done
+fi
+
+if [ -d "${CONFIG_SEED_DIR}" ]; then
+  for seed_config in "${CONFIG_SEED_DIR}"/*; do
+    [ -f "${seed_config}" ] || continue
+    config_name="$(basename "${seed_config}")"
+    [ "${config_name}" = "$(basename "${OPENCODE_CONFIG_FILE}")" ] && continue
+    target="${OPENCODE_CONFIG_DIR}/${config_name}"
+    if [ ! -f "${target}" ]; then
+      cp "${seed_config}" "${target}"
+      echo "Seeded missing config file: ${config_name}"
       copied=1
     fi
   done

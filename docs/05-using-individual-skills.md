@@ -34,6 +34,12 @@ That means the most accurate way to document this repository is:
 - list Playwright CLI as one skill
 - list Impeccable by its actual installable OpenCode skill directories
 
+There is also an environment-compatibility wrinkle:
+
+- plain OpenCode and OMO-enabled OpenCode may not expose every upstream skill under the exact same slash-command name
+- plugin-backed skills can be installed and still be surfaced differently from local directory skills
+- for that reason, the orchestrator should rely on contract outputs and phase behavior more than one exact command label
+
 ## Inventory Summary
 
 | Source | Inventory type | Count |
@@ -182,12 +188,12 @@ Most useful Impeccable skills for frontend work in this repo:
 
 ### Sequence A: Manual Feature Workflow
 
-1. `superpowers/brainstorming`
-2. `superpowers/writing-plans`
+1. `superpowers/brainstorming` or the closest planning/spec workflow exposed in your environment
+2. `superpowers/writing-plans` or the closest plan-authoring workflow exposed in your environment
 3. `ui-ux-pro-max`, `design-system`, or `ui-styling`
 4. implement with OpenCode
 5. `playwright-cli`
-6. `superpowers/verification-before-completion`
+6. `superpowers/verification-before-completion` or an equivalent evidence-first verification pass
 
 ### Sequence B: Manual Browser Bug Workflow
 
@@ -216,7 +222,7 @@ If the team wants a shorter shortlist:
 6. `agent-browser` for exploratory QA and screenshots
 7. `dogfood` for structured browser-based product review
 8. `audit` and `polish` for final design-quality passes
-9. `superpowers/verification-before-completion` for honest final checks
+9. `superpowers/verification-before-completion` or an equivalent evidence-first verification pass for honest final checks
 
 ## Practical Guidance
 

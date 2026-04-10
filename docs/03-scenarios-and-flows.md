@@ -16,8 +16,8 @@ Why:
 flowchart TD
   A[New project request] --> B[frontend-ai-orchestrator]
   B --> C[frontend-scaffold-intake]
-  C --> D[superpowers/brainstorming]
-  D --> E[superpowers/writing-plans]
+  C --> D[spec-authoring workflow]
+  D --> E[plan-authoring workflow]
   E --> F[ui-ux-pro-max or design-system or ui-styling]
   F --> G[OpenCode implementation]
   G --> H{Need browser exploration?}
@@ -48,12 +48,12 @@ flowchart TD
 
 Recommended skill path:
 
-- `superpowers/brainstorming`
-- `superpowers/writing-plans`
+- `superpowers/brainstorming` or the closest planning/spec workflow exposed in your environment
+- `superpowers/writing-plans` or the closest plan-authoring workflow exposed in your environment
 - `ui-ux-pro-max`, `design-system`, or `ui-styling`
 - `superpowers/executing-plans`
 - `playwright-cli`
-- `superpowers/verification-before-completion`
+- `superpowers/verification-before-completion` or equivalent evidence-first verification
 
 ## Scenario 3: A Bug Only Happens In The Real Browser
 

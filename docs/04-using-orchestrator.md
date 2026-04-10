@@ -21,7 +21,7 @@ Without an orchestrator, a frontend workflow usually depends on the user remembe
 | Phase | Purpose | Main skills |
 |---|---|---|
 | 0 | Intake and scaffold for greenfield apps | `frontend-scaffold-intake` |
-| 1 | Plan contract and design contract/alignment | `brainstorming`, `writing-plans`, plus `ui-ux-pro-max`, `design-system`, or `ui-styling` depending on design mode |
+| 1 | Plan contract and design contract/alignment | Prefer `superpowers/brainstorming` and `superpowers/writing-plans`, plus `ui-ux-pro-max`, `design-system`, or `ui-styling` depending on design mode |
 | 2 | Build milestone by milestone | OpenCode plus Superpowers execution skills |
 | 3 | Exploratory browser QA | `agent-browser` |
 | 4 | UI/UX refinement | Impeccable commands such as `audit` and `polish` |
@@ -59,6 +59,12 @@ When you start with the orchestrator:
 Yes, the orchestrator helps you use the skill stack without manually naming every underlying skill each time.
 
 That said, prompt quality still matters. If the first prompt is vague, the orchestrator will still need to ask more questions. If the first prompt already includes stack, style, scope, and references, the workflow becomes much faster.
+
+One more important nuance for mixed environments:
+
+- plain OpenCode and OMO-enabled OpenCode do not always expose identical slash-command names for upstream skills
+- the orchestrator is designed around phase outputs, not one exact exported command list
+- if `superpowers/brainstorming` or `superpowers/writing-plans` are not exposed under those exact names, the workflow should still continue by using the closest planning/spec behavior and writing the same `.orchestrator/contracts/*` artifacts
 
 ## Phase 1 Design Modes
 

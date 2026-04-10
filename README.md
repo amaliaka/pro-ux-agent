@@ -95,6 +95,47 @@ docker build --build-arg RUN_SMOKE_CHECK=0 -t pro-ux-agent .
 
 Browser runtime is required. The build will fail if a shared Chromium executable cannot be resolved.
 
+## Optional OMO Variant
+
+If you want to experiment with `oh-my-openagent` without making the default image heavier or more opinionated, this repository now includes a separate optional variant in [Dockerfile.omo](/Users/amaliaka/Work/Devops/pro-ux-agent/Dockerfile.omo).
+
+This is intended for advanced users who want to try:
+
+- multi-model sub-agent delegation
+- background-agent workflows
+- extra harness features such as built-in MCPs, hooks, and richer agent controls
+
+Build the optional glibc-based variant directly:
+
+```bash
+docker build -f Dockerfile.omo -t pro-ux-agent-omo \
+  --build-arg OMO_CLAUDE=no \
+  --build-arg OMO_OPENAI=no \
+  --build-arg OMO_GEMINI=no \
+  --build-arg OMO_COPILOT=no \
+  .
+```
+
+Run it like the standard image:
+
+```bash
+docker run --rm -it \
+  --entrypoint bash \
+  -v "$(pwd)/your-project:/workspace" \
+  -w /workspace \
+  pro-ux-agent-omo
+```
+
+Notes:
+
+- Keep `pro-ux-agent` as the recommended default image.
+- Treat `pro-ux-agent-omo` as experimental until the team is happy with its cost, complexity, and reliability tradeoffs.
+- Upstream still documents the installer package as `oh-my-opencode` even though the repo is now named `oh-my-openagent`.
+- `Dockerfile.omo` is intentionally glibc-based and separate from the main Alpine image because `oh-my-openagent` depends on GNU libc Linux binaries.
+- The current OMO CLI uses `--openai`, not `--chatgpt`, for OpenAI/ChatGPT subscription setup.
+- The OMO install runs during image build with the provided subscription flags, and provider authentication still happens at runtime.
+- Auth and provider setup still happen at runtime after the image is built.
+
 ## Quick Start
 
 ### Start An Interactive Shell
@@ -233,6 +274,7 @@ For the full workflow details and examples, use the docs linked below.
 - [docs/04-using-orchestrator.md](/Users/amaliaka/Work/Devops/pro-ux-agent/docs/04-using-orchestrator.md)
 - [docs/05-using-individual-skills.md](/Users/amaliaka/Work/Devops/pro-ux-agent/docs/05-using-individual-skills.md)
 - [docs/06-custom-skills-and-rationale.md](/Users/amaliaka/Work/Devops/pro-ux-agent/docs/06-custom-skills-and-rationale.md)
+- [docs/07-omo-variant.md](/Users/amaliaka/Work/Devops/pro-ux-agent/docs/07-omo-variant.md)
 
 ## Skill References
 

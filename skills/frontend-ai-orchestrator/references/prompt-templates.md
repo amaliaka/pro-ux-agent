@@ -64,7 +64,7 @@ Return:
 
 ```text
 Use combined Superpowers + selected design-authority workflow for this frontend task.
-Preferred skills: brainstorming, writing-plans, then choose from ui-ux-pro-max, design-system, or ui-styling. Use brand only when identity/voice is unresolved.
+Preferred skills: `brainstorming`, `writing-plans`, then choose from `ui-ux-pro-max`, `design-system`, or `ui-styling`. Use `brand` only when identity/voice is unresolved.
 Task: <feature/request>
 Constraints: <stack/timeline/requirements>
 Product/Industry: <product-type or domain>
@@ -76,8 +76,8 @@ Write phase-1 contract artifacts to:
 - `.orchestrator/contracts/DESIGN.md`
 
 Run sequence:
-1) superpowers brainstorming -> output `.orchestrator/contracts/SPEC.md`
-2) superpowers writing-plans -> output `.orchestrator/contracts/PLAN.md` (milestone IDs M1..Mn, acceptance IDs AC1..ACn)
+1) run `brainstorming` -> output `.orchestrator/contracts/SPEC.md`
+2) run `writing-plans` -> output `.orchestrator/contracts/PLAN.md` (milestone IDs M1..Mn, acceptance IDs AC1..ACn)
 3) choose design mode:
    - net_new_direction -> ui-ux-pro-max
    - design_system -> design-system
@@ -114,9 +114,9 @@ Return:
 
 ```text
 Implement the next milestone from the approved plan.
-Preferred skills: executing-plans, systematic-debugging, test-driven-development.
+Preferred skills: `executing-plans`, `systematic-debugging`, `test-driven-development`.
 Precondition: Plan + Design contract gate passed, or user explicitly waived this gate.
-Use superpowers execution discipline:
+Use Superpowers execution discipline:
 - small, verifiable steps
 - progress checklist
 - assumptions and risks logged
@@ -211,8 +211,8 @@ Return:
 ## 6) Release Verification Template
 
 ```text
-Use superpowers verification-before-completion workflow.
-Preferred skill: verification-before-completion.
+Use `verification-before-completion` workflow.
+Preferred skill: `verification-before-completion`.
 
 Report:
 1) requirement coverage

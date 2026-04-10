@@ -1,8 +1,9 @@
-ARG OPENCODE_IMAGE=ghcr.io/anomalyco/opencode:latest
-FROM ${OPENCODE_IMAGE} AS skills-builder
+ARG NODE_IMAGE=node:24-bookworm-slim
+FROM ${NODE_IMAGE} AS skills-builder
 
 USER root
 
+ARG OPENCODE_VERSION=latest
 ARG ENGRAM_VERSION=latest
 ARG SUPERPOWERS_REF=main
 ARG UI_UX_PRO_MAX_REF=main
@@ -13,7 +14,9 @@ ARG PLAYWRIGHT_CLI_VERSION=latest
 ARG PLAYWRIGHT_VERSION=latest
 ARG PLAYWRIGHT_BROWSER_CHANNEL=chromium
 ARG AGENT_BROWSER_VERSION=latest
-ENV ENGRAM_VERSION=${ENGRAM_VERSION} \
+
+ENV OPENCODE_VERSION=${OPENCODE_VERSION} \
+    ENGRAM_VERSION=${ENGRAM_VERSION} \
     SUPERPOWERS_REF=${SUPERPOWERS_REF} \
     UI_UX_PRO_MAX_REF=${UI_UX_PRO_MAX_REF} \
     IMPECCABLE_REF=${IMPECCABLE_REF} \
@@ -39,7 +42,7 @@ RUN chmod +x \
     /usr/local/bin/install-container-packages \
     /usr/local/bin/ensure-pnpm \
     /usr/local/bin/configure-opencode-engram
-RUN APK_EXTRA_PACKAGES=gcompat /usr/local/bin/install-container-packages bash ca-certificates curl git nodejs npm python3
+RUN /usr/local/bin/install-container-packages bash ca-certificates curl git python3 tar
 RUN /usr/local/bin/ensure-pnpm
 RUN LOCAL_SKILL_ROOT=/opt/opencode-custom-skills \
     OPENCODE_SKILLS_DIR=/root/.config/opencode/skills \
@@ -55,10 +58,11 @@ RUN mkdir -p /opt/opencode-skills-seed /opt/opencode-plugins-seed /opt/opencode-
     && cp -R /root/.config/opencode/plugins/. /opt/opencode-plugins-seed/ \
     && cp /root/.config/opencode/opencode.json /opt/opencode-config-seed/opencode.json
 
-FROM ${OPENCODE_IMAGE}
+FROM ${NODE_IMAGE}
 
 USER root
 
+ARG OPENCODE_VERSION=latest
 ARG SUPERPOWERS_REF=main
 ARG UI_UX_PRO_MAX_REF=main
 ARG IMPECCABLE_REF=main
@@ -68,9 +72,16 @@ ARG PLAYWRIGHT_CLI_VERSION=latest
 ARG PLAYWRIGHT_VERSION=latest
 ARG PLAYWRIGHT_BROWSER_CHANNEL=chromium
 ARG AGENT_BROWSER_VERSION=latest
+ARG OMO_PACKAGE=oh-my-opencode
+ARG OMO_VERSION=latest
+ARG OMO_CLAUDE=no
+ARG OMO_OPENAI=no
+ARG OMO_GEMINI=no
+ARG OMO_COPILOT=no
 ARG RUN_SMOKE_CHECK=1
 
-ENV SUPERPOWERS_REF=${SUPERPOWERS_REF} \
+ENV OPENCODE_VERSION=${OPENCODE_VERSION} \
+    SUPERPOWERS_REF=${SUPERPOWERS_REF} \
     UI_UX_PRO_MAX_REF=${UI_UX_PRO_MAX_REF} \
     IMPECCABLE_REF=${IMPECCABLE_REF} \
     PLAYWRIGHT_CLI_REF=${PLAYWRIGHT_CLI_REF} \
@@ -83,19 +94,29 @@ ENV SUPERPOWERS_REF=${SUPERPOWERS_REF} \
     PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=/usr/bin/chromium \
     AGENT_BROWSER_EXECUTABLE_PATH=/usr/bin/chromium \
     AGENT_BROWSER_ARGS=--no-sandbox,--disable-dev-shm-usage \
-    ENGRAM_DATA_DIR=/root/.engram
+    ENGRAM_DATA_DIR=/root/.engram \
+    OMO_PACKAGE=${OMO_PACKAGE} \
+    OMO_VERSION=${OMO_VERSION} \
+    OMO_CLAUDE=${OMO_CLAUDE} \
+    OMO_OPENAI=${OMO_OPENAI} \
+    OMO_GEMINI=${OMO_GEMINI} \
+    OMO_COPILOT=${OMO_COPILOT}
 
 COPY scripts/ensure-opencode-skills.sh /usr/local/bin/ensure-opencode-skills
 COPY scripts/smoke-opencode-toolchain.sh /usr/local/bin/smoke-opencode-toolchain
 COPY scripts/install-container-packages.sh /usr/local/bin/install-container-packages
 COPY scripts/ensure-pnpm.sh /usr/local/bin/ensure-pnpm
+COPY scripts/install-oh-my-openagent.sh /usr/local/bin/install-oh-my-openagent
 
 RUN chmod +x \
     /usr/local/bin/ensure-opencode-skills \
     /usr/local/bin/smoke-opencode-toolchain \
     /usr/local/bin/install-container-packages \
-    /usr/local/bin/ensure-pnpm
-RUN APK_EXTRA_PACKAGES=gcompat /usr/local/bin/install-container-packages bash ca-certificates chromium curl git nodejs npm python3
+    /usr/local/bin/ensure-pnpm \
+    /usr/local/bin/install-oh-my-openagent
+RUN /usr/local/bin/install-container-packages bash ca-certificates chromium curl git python3 tar
+RUN npm install -g "opencode-ai@${OPENCODE_VERSION}" \
+    && npm cache clean --force
 RUN /usr/local/bin/ensure-pnpm
 
 COPY --from=skills-builder /usr/local/bin/engram /usr/local/bin/engram
@@ -110,6 +131,11 @@ RUN mkdir -p /root/.config/opencode/skills /root/.config/opencode/plugins /root/
 
 RUN npm install -g "@playwright/cli@${PLAYWRIGHT_CLI_VERSION}" "playwright@${PLAYWRIGHT_VERSION}" "agent-browser@${AGENT_BROWSER_VERSION}" \
     && npm cache clean --force
+
+RUN install-oh-my-openagent
+RUN mkdir -p /opt/opencode-config-seed \
+    && cp /root/.config/opencode/opencode.json /opt/opencode-config-seed/opencode.json \
+    && find /root/.config/opencode -maxdepth 1 -type f ! -name 'opencode.json' -exec cp {} /opt/opencode-config-seed/ \;
 
 RUN agent-browser close >/dev/null 2>&1 || true
 RUN if [ "${RUN_SMOKE_CHECK}" = "1" ]; then smoke-opencode-toolchain; fi

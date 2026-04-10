@@ -19,6 +19,7 @@ Use this doc set when you want to:
 | [04-using-orchestrator.md](./04-using-orchestrator.md) | How to use `frontend-ai-orchestrator` effectively |
 | [05-using-individual-skills.md](./05-using-individual-skills.md) | Individual skill reference and recommendations for FE work |
 | [06-custom-skills-and-rationale.md](./06-custom-skills-and-rationale.md) | Why the custom skills exist and why this stack runs in Docker |
+| [07-omo-variant.md](./07-omo-variant.md) | Optional `oh-my-openagent` variant, tradeoffs, and setup |
 
 ## Stack At A Glance
 

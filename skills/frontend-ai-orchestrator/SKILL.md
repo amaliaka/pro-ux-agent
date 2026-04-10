@@ -1,6 +1,6 @@
 ---
 name: frontend-ai-orchestrator
-description: "Orchestrate end-to-end frontend delivery with a reliable core path (Superpowers + Playwright), routed design authority selection, and optional quality enhancers (agent-browser, Impeccable). Delegates greenfield intake/scaffolding to a dedicated scaffold skill, then runs contract-based planning/design, implementation, regression testing, and release verification with machine-readable phase gates."
+description: "Orchestrate end-to-end frontend delivery with a reliable core path (Superpowers-style planning + Playwright), routed design authority selection, and optional quality enhancers (agent-browser, Impeccable). Delegates greenfield intake/scaffolding to a dedicated scaffold skill, then runs contract-based planning/design, implementation, regression testing, and release verification with machine-readable phase gates."
 ---
 
 # Frontend AI Orchestrator
@@ -24,7 +24,7 @@ Follow this strict order unless the user explicitly requests a shortcut:
 3. Explore browser behavior with agent-browser (optional enhancer phase)
 4. Refine UI/UX with Impeccable (optional enhancer phase, usually triggered by phase 3 or poor phase 5 signals)
 5. Lock regression coverage with Playwright CLI (core required phase)
-6. Final verification with Superpowers
+6. Final verification with Superpowers discipline
 
 Core required phases:
 1. Phase 0 (when greenfield), phase 1, phase 2, phase 5, phase 6
@@ -74,8 +74,8 @@ Artifact location policy:
 3. Record these full paths in phase status `artifacts`.
 
 Phase 1 ownership model (non-negotiable):
-1. `superpowers/brainstorming` owns `.orchestrator/contracts/SPEC.md` (problem, users, constraints, assumptions).
-2. `superpowers/writing-plans` owns `.orchestrator/contracts/PLAN.md` (milestones with stable IDs: `M1`, `M2`, ... and acceptance criteria IDs: `AC1`, `AC2`, ...).
+1. `brainstorming` owns `.orchestrator/contracts/SPEC.md` (problem, users, constraints, assumptions).
+2. `writing-plans` owns `.orchestrator/contracts/PLAN.md` (milestones with stable IDs: `M1`, `M2`, ... and acceptance criteria IDs: `AC1`, `AC2`, ...).
 3. `.orchestrator/contracts/DESIGN.md` must have exactly one primary design authority. Choose from:
    - `ui-ux-pro-max` for open-ended direction and cross-domain design reasoning
    - `design-system` for token/component/system architecture
@@ -119,14 +119,14 @@ Use these concrete skill names when available:
 
 1. Intake + Scaffold phase: `frontend-scaffold-intake` (fallback: OpenCode shell/tooling + user confirmation loop)
 2. Plan + Design contract phase: `brainstorming`, `writing-plans`, then choose `ui-ux-pro-max`, `design-system`, or `ui-styling`; use `brand` when identity/voice is unresolved
-3. Build phase: `executing-plans`, `systematic-debugging`, `test-driven-development` (Superpowers)
+3. Build phase: `executing-plans`, `systematic-debugging`, `test-driven-development`
 4. Exploratory QA phase: `agent-browser` (agent-browser)
 5. Refine phase: `frontend-design`, `polish`, `audit` (Impeccable)
 6. Regression phase: `playwright-cli` (Playwright CLI)
-7. Release phase: `verification-before-completion` (Superpowers)
+7. Release phase: `verification-before-completion`
 
 Skill criticality:
-1. Required for baseline success: `frontend-scaffold-intake` (greenfield only), `brainstorming`, `writing-plans`, `playwright-cli`, `verification-before-completion`
+1. Required for baseline success: `frontend-scaffold-intake` (greenfield only), a spec/planning pass, a plan-authoring pass, `playwright-cli`, and a final evidence-first verification pass
 2. Required phase-1 design authority: one selected design mode backed by `ui-ux-pro-max`, `design-system`, `ui-styling`, or authoritative existing-design alignment written into `.orchestrator/contracts/DESIGN.md`
 3. Optional phase-1 input skill: `brand`
 4. Optional quality enhancers: `agent-browser`, `frontend-design`, `polish`, `audit`
@@ -135,6 +135,7 @@ Fallback rule:
 If a named skill is unavailable in the current environment, continue with the same phase objective using tool-level commands and equivalent process.
 1. Do not skip core phases.
 2. Optional phases may be marked `skipped` with an explicit reason in status JSON.
+3. This repository installs Superpowers skills from `obra/superpowers` during image build, pinned by `SUPERPOWERS_REF`, so command availability tracks the upstream source rather than static local copies.
 
 Deterministic fallback artifact format:
 1. If skill output is free-form, normalize into `.orchestrator/contracts/SPEC.md`, `.orchestrator/contracts/PLAN.md`, and `.orchestrator/contracts/DESIGN.md` before moving phases.
@@ -219,7 +220,7 @@ Use [references/quality-gates.md](references/quality-gates.md) for complete chec
 7. Do not move from Plan + Design contracts to Build without a contract gate pass or explicit user waiver.
 8. For greenfield setup, do not scaffold until stack + addon choices are confirmed and the path strategy/target path are explicit.
 9. Use `pnpm` as the default package manager unless explicitly overridden by the user.
-10. When using Superpowers in OpenCode, prefer namespaced loading (for example `superpowers/brainstorming`) when manually invoking skills.
+10. Prefer invoking the canonical Superpowers command names listed above; they are synced from `obra/superpowers` during image build using `SUPERPOWERS_REF`.
 11. Do not claim "design approved" unless phase 1 contract checks pass.
 12. Prefer measurable evaluation rubrics over subjective wording when reporting UX quality.
 13. Optional enhancer phases must never silently fail; they must end as `passed`, `skipped`, `waived`, or `failed` in status JSON.
