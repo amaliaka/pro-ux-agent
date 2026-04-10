@@ -41,6 +41,7 @@ RUN set -eux; \
         bash \
         ca-certificates \
         curl \
+        gcompat \
         git \
         nodejs \
         npm \
@@ -120,6 +121,7 @@ RUN set -eux; \
         ca-certificates \
         chromium \
         curl \
+        gcompat \
         git \
         nodejs \
         npm \
