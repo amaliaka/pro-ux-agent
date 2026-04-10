@@ -21,7 +21,7 @@ Containerizing the stack keeps those dependencies consistent for the whole team.
 Run the container against a local project folder:
 
 ```bash
-docker run --rm -it \
+docker run -it \
   --entrypoint bash \
   -v "$(pwd)/your-project:/workspace" \
   -w /workspace \
@@ -37,7 +37,7 @@ opencode
 ## Run OpenCode Web
 
 ```bash
-docker run --rm -it \
+docker run -it \
   -p 3010:3010 \
   -v "$(pwd)/your-project:/workspace" \
   -w /workspace \
@@ -54,7 +54,7 @@ http://localhost:3010
 If `3010` is already used, change both host and container port:
 
 ```bash
-docker run --rm -it \
+docker run -it \
   -p 3110:3110 \
   -v "$(pwd)/your-project:/workspace" \
   -w /workspace \
@@ -99,7 +99,7 @@ Persist Engram memory:
 Combined example:
 
 ```bash
-docker run --rm -it \
+docker run -it \
   --entrypoint bash \
   -v "$(pwd)/your-project:/workspace" \
   -v "$HOME/.engram:/root/.engram" \

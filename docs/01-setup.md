@@ -35,7 +35,7 @@ docker build -t pro-ux-agent \
 ## 2. Start A Shell In The Container
 
 ```bash
-docker run --rm -it \
+docker run -it \
   --entrypoint bash \
   -v "$(pwd)/your-project:/workspace" \
   -w /workspace \
@@ -75,7 +75,7 @@ If you want your OpenCode config to survive container restarts:
 mkdir -p ~/.opencode-config
 mkdir -p ~/.engram
 
-docker run --rm -it \
+docker run -it \
   --entrypoint bash \
   -v "$(pwd)/your-project:/workspace" \
   -v "$HOME/.engram:/root/.engram" \
@@ -113,7 +113,7 @@ This is helpful when you want browser sessions or agent-browser state across run
 ```bash
 mkdir -p ~/.agent-browser
 
-docker run --rm -it \
+docker run -it \
   --entrypoint bash \
   -v "$(pwd)/your-project:/workspace" \
   -v "$HOME/.opencode-config:/root/.config/opencode" \

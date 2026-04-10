@@ -97,7 +97,7 @@ Browser runtime is required. The build will fail if a shared Chromium executable
 
 ## Optional OMO Variant
 
-If you want to experiment with `oh-my-openagent` without making the default image heavier or more opinionated, this repository now includes a separate optional variant in [Dockerfile.omo](/Users/amaliaka/Work/Devops/pro-ux-agent/Dockerfile.omo).
+If you want to experiment with `oh-my-openagent` without making the default image heavier or more opinionated, this repository now includes a separate optional variant in [Dockerfile.omo](./Dockerfile.omo).
 
 This is intended for advanced users who want to try:
 
@@ -119,7 +119,7 @@ docker build -f Dockerfile.omo -t pro-ux-agent-omo \
 Run it like the standard image:
 
 ```bash
-docker run --rm -it \
+docker run -it \
   --entrypoint bash \
   -v "$(pwd)/your-project:/workspace" \
   -w /workspace \
@@ -141,7 +141,7 @@ Notes:
 ### Start An Interactive Shell
 
 ```bash
-docker run --rm -it \
+docker run -it \
   --entrypoint bash \
   -v "$(pwd)/your-project:/workspace" \
   -w /workspace \
@@ -157,7 +157,7 @@ opencode
 ### Run OpenCode Web
 
 ```bash
-docker run --rm -it \
+docker run -it \
   -p 3010:3010 \
   -v "$(pwd)/your-project:/workspace" \
   -w /workspace \
@@ -170,7 +170,7 @@ Open `http://localhost:3010`.
 If port `3010` is already in use:
 
 ```bash
-docker run --rm -it \
+docker run -it \
   -p 3110:3110 \
   -v "$(pwd)/your-project:/workspace" \
   -w /workspace \
@@ -187,7 +187,7 @@ By default, OpenCode config, Engram memory, and agent-browser state live inside 
 ```bash
 mkdir -p ~/.opencode-config
 
-docker run --rm -it \
+docker run -it \
   --entrypoint bash \
   -v "$(pwd)/your-project:/workspace" \
   -v "$HOME/.opencode-config:/root/.config/opencode" \
@@ -206,7 +206,7 @@ ensure-opencode-skills
 ```bash
 mkdir -p ~/.engram
 
-docker run --rm -it \
+docker run -it \
   --entrypoint bash \
   -v "$(pwd)/your-project:/workspace" \
   -v "$HOME/.engram:/root/.engram" \
@@ -219,7 +219,7 @@ docker run --rm -it \
 ```bash
 mkdir -p ~/.agent-browser
 
-docker run --rm -it \
+docker run -it \
   --entrypoint bash \
   -v "$(pwd)/your-project:/workspace" \
   -v "$HOME/.agent-browser:/root/.agent-browser" \
@@ -267,17 +267,17 @@ For the full workflow details and examples, use the docs linked below.
 
 ## Documentation
 
-- [docs/README.md](/Users/amaliaka/Work/Devops/pro-ux-agent/docs/README.md)
-- [docs/01-setup.md](/Users/amaliaka/Work/Devops/pro-ux-agent/docs/01-setup.md)
-- [docs/02-docker-usage.md](/Users/amaliaka/Work/Devops/pro-ux-agent/docs/02-docker-usage.md)
-- [docs/03-scenarios-and-flows.md](/Users/amaliaka/Work/Devops/pro-ux-agent/docs/03-scenarios-and-flows.md)
-- [docs/04-using-orchestrator.md](/Users/amaliaka/Work/Devops/pro-ux-agent/docs/04-using-orchestrator.md)
-- [docs/05-using-individual-skills.md](/Users/amaliaka/Work/Devops/pro-ux-agent/docs/05-using-individual-skills.md)
-- [docs/06-custom-skills-and-rationale.md](/Users/amaliaka/Work/Devops/pro-ux-agent/docs/06-custom-skills-and-rationale.md)
-- [docs/07-omo-variant.md](/Users/amaliaka/Work/Devops/pro-ux-agent/docs/07-omo-variant.md)
+- [docs/README.md (Document Map)](./docs/README.md#document-map)
+- [docs/01-setup.md](./docs/01-setup.md)
+- [docs/02-docker-usage.md](./docs/02-docker-usage.md)
+- [docs/03-scenarios-and-flows.md](./docs/03-scenarios-and-flows.md)
+- [docs/04-using-orchestrator.md](./docs/04-using-orchestrator.md)
+- [docs/05-using-individual-skills.md](./docs/05-using-individual-skills.md)
+- [docs/06-custom-skills-and-rationale.md](./docs/06-custom-skills-and-rationale.md)
+- [docs/07-omo-variant.md](./docs/07-omo-variant.md)
 
 ## Skill References
 
-- [frontend-ai-playbook.md](/Users/amaliaka/Work/Devops/pro-ux-agent/frontend-ai-playbook.md)
-- [skills/frontend-ai-orchestrator/SKILL.md](/Users/amaliaka/Work/Devops/pro-ux-agent/skills/frontend-ai-orchestrator/SKILL.md)
-- [skills/frontend-scaffold-intake/SKILL.md](/Users/amaliaka/Work/Devops/pro-ux-agent/skills/frontend-scaffold-intake/SKILL.md)
+- [frontend-ai-playbook.md](./frontend-ai-playbook.md)
+- [skills/frontend-ai-orchestrator/SKILL.md](./skills/frontend-ai-orchestrator/SKILL.md)
+- [skills/frontend-scaffold-intake/SKILL.md](./skills/frontend-scaffold-intake/SKILL.md)

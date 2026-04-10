@@ -53,7 +53,7 @@ The OMO installer runs during the image build using the supplied subscription fl
 Then run the container:
 
 ```bash
-docker run --rm -it \
+docker run -it \
   --entrypoint bash \
   -v "$(pwd)/your-project:/workspace" \
   -w /workspace \
