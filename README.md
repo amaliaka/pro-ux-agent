@@ -2,6 +2,7 @@
 
 This image extends `ghcr.io/anomalyco/opencode` and preinstalls:
 
+- engram persistent memory for OpenCode (`Gentleman-Programming/engram`)
 - superpower skills (`obra/superpowers`)
 - ui ux pro max skills (`nextlevelbuilder/ui-ux-pro-max-skill`)
 - impeccable skills (`pbakaus/impeccable`)
@@ -12,8 +13,10 @@ This image extends `ghcr.io/anomalyco/opencode` and preinstalls:
 
 Superpowers is configured using the official OpenCode plugin method in global config (`~/.config/opencode/opencode.json`) instead of manual skill copying.
 UI UX Pro Max uses the official `uipro-cli` install flow (`uipro init --ai opencode`) and is then installed into global OpenCode skills.
+Engram is installed as a native binary, its OpenCode plugin is seeded into `~/.config/opencode/plugins/engram.ts`, and the image ensures an `mcp.engram` entry exists in `~/.config/opencode/opencode.json`.
 
 The image now uses a multi-stage build:
+
 - builder stage installs and prepares all skills/config
 - final stage keeps only runtime requirements and seeded skills
 
@@ -127,6 +130,22 @@ If this is a new/empty host config folder, seed bundled skills once:
 ensure-opencode-skills
 ```
 
+## Persist Engram memory on host (optional)
+
+Engram stores its SQLite database and synced memory files in `/root/.engram` inside the container.
+Bind-mount a host directory if you want memory to survive container restarts:
+
+```bash
+mkdir -p ~/.engram
+
+docker run --rm -it \
+  --entrypoint bash \
+  -v "$(pwd)/your-project:/workspace" \
+  -v "$HOME/.engram:/root/.engram" \
+  -w /workspace \
+  opencode-with-skills
+```
+
 ## Persist agent-browser state on host (optional)
 
 `agent-browser` stores sessions and state in `~/.agent-browser` by default.
@@ -138,7 +157,6 @@ mkdir -p ~/.agent-browser
 docker run --rm -it \
   --entrypoint bash \
   -v "$(pwd)/your-project:/workspace" \
-  -v "$HOME/.opencode-config:/root/.config/opencode" \
   -v "$HOME/.agent-browser:/root/.agent-browser" \
   -w /workspace \
   opencode-with-skills
@@ -160,10 +178,21 @@ ensure-opencode-skills
 
 ## Smoke check (optional)
 
-Validate the toolchain and shared-browser wiring:
+Validate the toolchain, Engram wiring, and shared-browser setup:
 
 ```bash
 smoke-opencode-toolchain
+```
+
+For a direct Engram sanity check inside the container:
+
+```bash
+engram version
+engram serve >/tmp/engram.log 2>&1 &
+sleep 1
+curl http://127.0.0.1:7437/health
+engram save "Docker container engram test memory"
+engram search "Docker container engram test"
 ```
 
 ## Documentation

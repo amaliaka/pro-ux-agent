@@ -50,7 +50,7 @@ opencode
 
 ## 3. Run A Smoke Check
 
-This image ships with a smoke test that validates the core runtime:
+This image ships with a smoke test that validates the core runtime, including Engram:
 
 ```bash
 smoke-opencode-toolchain
@@ -59,33 +59,54 @@ smoke-opencode-toolchain
 It checks:
 
 - OpenCode is available
+- Engram is installed
+- the Engram OpenCode plugin is present
+- the OpenCode config includes the `mcp.engram` server entry
 - Node, npm, and Python are present
 - Playwright CLI is installed
 - agent-browser is installed
 - both browser tools point at the same Chromium executable
 
-## 4. Persist Skills And Config Across Runs
+## 4. Persist Skills, Config, And Memory Across Runs
 
 If you want your OpenCode config to survive container restarts:
 
 ```bash
 mkdir -p ~/.opencode-config
+mkdir -p ~/.engram
 
 docker run --rm -it \
   --entrypoint bash \
   -v "$(pwd)/your-project:/workspace" \
-  -v "$HOME/.opencode-config:/root/.config/opencode" \
+  -v "$HOME/.engram:/root/.engram" \
   -w /workspace \
   opencode-with-skills
 ```
 
-If the mounted config folder is empty, seed the bundled skills once:
+If the mounted config folder is empty, seed the bundled OpenCode assets once:
 
 ```bash
 ensure-opencode-skills
 ```
 
-## 5. Persist agent-browser State If Needed
+Engram stores persistent memory in `/root/.engram`, so mounting `$HOME/.engram` keeps memory across container rebuilds and restarts.
+
+## 5. Verify Engram Inside The Container
+
+Run this after starting a shell in the container:
+
+```bash
+engram version
+engram serve >/tmp/engram.log 2>&1 &
+sleep 1
+curl http://127.0.0.1:7437/health
+engram save "Docker setup engram test"
+engram search "Docker setup engram test"
+```
+
+If you plan to use OpenCode with persisted memory, keep `/root/.config/opencode` and `/root/.engram` mounted together.
+
+## 6. Persist agent-browser State If Needed
 
 This is helpful when you want browser sessions or agent-browser state across runs:
 

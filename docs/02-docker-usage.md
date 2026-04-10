@@ -7,6 +7,7 @@ This page covers the day-to-day Docker patterns for this repository after the im
 This repository intentionally runs OpenCode and the skill stack inside a container because the workflow depends on more than just one CLI:
 
 - OpenCode plus several skill bundles
+- Engram persistent memory for OpenCode
 - Playwright CLI
 - agent-browser
 - a shared Chromium runtime
@@ -89,13 +90,19 @@ Persist agent-browser state:
 -v "$HOME/.agent-browser:/root/.agent-browser"
 ```
 
+Persist Engram memory:
+
+```bash
+-v "$HOME/.engram:/root/.engram"
+```
+
 Combined example:
 
 ```bash
 docker run --rm -it \
   --entrypoint bash \
   -v "$(pwd)/your-project:/workspace" \
-  -v "$HOME/.opencode-config:/root/.config/opencode" \
+  -v "$HOME/.engram:/root/.engram" \
   -v "$HOME/.agent-browser:/root/.agent-browser" \
   -w /workspace \
   opencode-with-skills
@@ -115,6 +122,17 @@ Validate runtime:
 smoke-opencode-toolchain
 ```
 
+Test Engram directly:
+
+```bash
+engram version
+engram serve >/tmp/engram.log 2>&1 &
+sleep 1
+curl http://127.0.0.1:7437/health
+engram save "Docker usage engram test"
+engram search "Docker usage engram test"
+```
+
 Reset agent-browser daemon after changing browser settings:
 
 ```bash
@@ -124,9 +142,10 @@ agent-browser close
 ## Practical Team Notes
 
 - The image uses one shared system Chromium for both Playwright CLI and agent-browser.
+- Engram data lives in `/root/.engram`, so mount that path if you want memory to persist.
 - `PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1` avoids duplicated Playwright browser bundles in the image.
 - `pnpm` is enabled by default, which matches the scaffold behavior in the custom skills.
-- The image seeds skills so new containers do not need to reinstall the whole stack every time.
+- The image seeds OpenCode skills, plugins, and config so new containers do not need to reinstall the whole stack every time.
 
 ## Related Docs
 
